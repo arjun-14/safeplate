@@ -1,48 +1,56 @@
-# SafePlate
+# SafePlate — AI-Powered Food Safety Assistant 🥗
 
-A Flutter application to help users with food allergies identify potentially unsafe ingredients by scanning a picture of their meal.
+SafePlate helps people with food allergies feel confident when eating out. Take a photo of a restaurant menu, tell SafePlate what allergens you want to avoid, and it returns **safe**, **unsafe**, and **modifiable** dish recommendations—plus brief explanations.
 
-## Getting Started
+**Hackathon project (TIDALHACK:26)**  
+**Devpost:** https://devpost.com/software/safeplate-8fznlt  
 
-This project is a starting point for a Flutter application.
+---
 
-To get started, you will need to have Flutter installed. For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Why SafePlate?
 
-### Prerequisites
+Dining out can be stressful when menus don’t clearly list ingredients or hidden allergens. SafePlate uses vision + LLM reasoning to make menus easier to understand and safer to navigate.
 
-- Flutter SDK
-- An editor like Android Studio or VS Code with the Flutter plugin.
+---
 
-### Running the app
+## What it does
 
-1. Clone the repository:
-   ```sh
-   git clone https://github.com/your-username/safeplate.git
-   ```
-2. Navigate to the project directory:
-   ```sh
-   cd safeplate
-   ```
-3. Install dependencies:
-   ```sh
-   flutter pub get
-   ```
-4. Run the app:
-   ```sh
-   flutter run
-   ```
+- 📸 **Upload/scan a menu image**
+- 🔎 **Extract dishes from the menu image**
+- 🧠 **Generate ingredient lists**
+- 🚫 **Filter based on allergens you want to avoid**
+- 🏷️ **Classify dishes** into:
+  - **SAFE** (no allergen detected)
+  - **UNSAFE** (contains allergen)
+  - **MODIFIABLE** (can be customized to remove/substitute allergen)
 
-## Features
+---
 
-- **Allergen Profile**: Users can select their allergens to create a profile.
-- **Image Analysis**: Take a picture of a meal, and the app will analyze it for the selected allergens.
-- **Results**: The app will show the results of the analysis, indicating if the meal is safe to eat.
-- **Bottom Navigation**: Easy navigation between the home and profile screens.
-- **New UI**: A new, intuitive UI on the home screen to take or upload a photo.
+## System overview
 
-A few resources to get you started if this is your first Flutter project:
+**Flow (high level):**
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+`Menu Image → Dish Extraction (Vision) → Ingredients + Safety (LLM) → Safe/Unsafe/Modifiable Results`
+
+### Architecture (serverless)
+- Client sends menu image as **Base64** (HTTP POST)
+- **API Gateway** receives request
+- **AWS Lambda**:
+  1) decodes image  
+  2) calls **Amazon Bedrock (Claude Vision)** to extract dish names  
+  3) calls **Amazon Bedrock (Claude)** per dish to return ingredients + safety classification  
+  4) returns a structured JSON response
+
+---
+
+## Tech stack
+
+- **AWS Lambda** (serverless backend)
+- **Amazon API Gateway** (REST endpoint)
+- **Amazon Bedrock** (Claude models)
+  - Claude **3.5 Sonnet (Vision)** for dish extraction
+  - Claude **3 Haiku** for ingredients + allergen safety
+- **Python + boto3**
+- **Base64** image transport
+- **Flutter** (mobile UI)
+
