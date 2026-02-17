@@ -5,6 +5,8 @@ SafePlate helps people with food allergies feel confident when eating out. Take 
 **Hackathon project (TIDALHACK:26)**  
 **Devpost:** https://devpost.com/software/safeplate-8fznlt  
 
+![demo](./assets/images/app_demo.gif)
+
 ---
 
 ## Why SafePlate?
